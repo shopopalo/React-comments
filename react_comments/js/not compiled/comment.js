@@ -5,7 +5,7 @@ var CommentBox = React.createClass({
   
   // загрузка данных с сервера (использование jquery - плохой тон)
   loadCommentsFromServer: function() {
-    $.ajax({
+    /*$.ajax({
       url: this.props.url,
       dataType: 'json',
       type: 'GET',
@@ -15,7 +15,16 @@ var CommentBox = React.createClass({
       error: function(xhr, status, err) {
         console.error(this.props.url, status, err.toString());
       }.bind(this)
-    });
+    });*/
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('get', this.props.url, true);
+    xhr.onload = function() {
+      var data = JSON.parse(xhr.responseText);
+      this.setState({ data: data });
+    }.bind(this);
+    xhr.send();
+
   },
 
   // принимает данные коментария из свойства onCommentSubmit дочернего компонента
@@ -31,7 +40,7 @@ var CommentBox = React.createClass({
     });
 
     // отправка нового коментария на сервер
-    $.ajax({
+    /*$.ajax({
       url: this.props.url,
       dataType: 'json',
       type: 'POST',
@@ -43,7 +52,16 @@ var CommentBox = React.createClass({
         this.setState({data: comments});
         console.error(this.props.url, status, err.toString());
       }.bind(this)
-    });
+    });*/
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('post', this.props.url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+    xhr.onload = function() {
+      var data = JSON.parse(xhr.responseText);
+      this.setState({ data: data });
+    }.bind(this);
+    xhr.send(JSON.stringify(comment));
   },
 
   handleCommentDelete: function(commentId) {
@@ -67,7 +85,7 @@ var CommentBox = React.createClass({
       data: commentsForChange
     });
 
-    $.ajax({
+    /*$.ajax({
       url: this.props.url,
       type: 'DELETE',
       data: {"id": commentId},
@@ -81,7 +99,15 @@ var CommentBox = React.createClass({
         });
         console.error(this.props.url, status, err.toString());
       }.bind(this)
-    });
+    });*/
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('delete', this.props.url, true);
+    xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+    xhr.onload = function() {
+      //console.log('success');
+    }.bind(this);
+    xhr.send(JSON.stringify({"id": commentId}));
   },
 
   // при создании компонента загружаем данные
