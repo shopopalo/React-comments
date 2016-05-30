@@ -14,15 +14,15 @@ def comments_handler():
         comments = json.loads(f.read())
 
     if request.method == 'POST':
-        new_comment = request.form.to_dict()
-        new_comment['id'] = int(time.time() * 1000)
+        new_comment = request.json
         comments.append(new_comment)
 
         with open('comments.json', 'w') as f:
             f.write(json.dumps(comments, indent=4, separators=(',', ': ')))
 
     if request.method == 'DELETE':
-        del_comment_id = int(request.form.to_dict()['id'])
+        print(request.json)
+        del_comment_id = int(request.json['id'])
         for comment in comments:
             if comment['id'] == del_comment_id:
                 comments.remove(comment)
